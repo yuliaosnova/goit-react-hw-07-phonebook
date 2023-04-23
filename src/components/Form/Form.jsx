@@ -1,24 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import css from './Form.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { add } from 'redux/contactsSlice';
+// import { add } from 'redux/contactsSlice';
 import { setShowModal } from 'redux/showModalSlice';
 import { nanoid } from 'nanoid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { addContact, fetchContacts } from 'redux/operations';
 
 
 export default function Form() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   console.log (contacts);
 
   const notify = (message) => toast(message);
-
-
   const dispatch = useDispatch();
+
+//   useEffect(() => {
+// 	dispatch(fetchContacts());
+//  }, [dispatch]);
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -44,9 +47,14 @@ export default function Form() {
 		notify(`${name} is already in contacts`);
 		
     } else {
-      dispatch(add({ name, number, id: nanoid() }));
-		dispatch(setShowModal())
+      // dispatch(add({ name, number, id: nanoid() }));
+		console.log(name, number)
+		dispatch(addContact({name, phone:number}));
+		// dispatch(fetchContacts());
+		dispatch(setShowModal());
     }
+	 
+		// dispatch(setShowModal())
 
     reset();
   };

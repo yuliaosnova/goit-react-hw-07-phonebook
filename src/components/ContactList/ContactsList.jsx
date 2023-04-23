@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import css from './ContactList.module.css';
-import { remove } from 'redux/contactsSlice';
+// import { remove } from 'redux/contactsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   BsFillPersonLinesFill,
   BsFillTelephoneFill,
   BsPersonDashFill,
 } from 'react-icons/bs';
+import { getContacts } from 'redux/selectors';
+import { deleteContact, fetchContacts } from 'redux/operations';
 
 const ContactList = () => {
-  const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+	 console.log('useEffect')
+  }, [dispatch]);
+
+  const contacts = useSelector(getContacts);
+  console.log('contacts', contacts);
+  const filter = useSelector(state => state.filter);
 
   function getFilteredContacts() {
     return contacts.filter(contact =>
@@ -19,7 +28,7 @@ const ContactList = () => {
     );
   }
   const filteredContacts = getFilteredContacts();
-  //   console.log ('filtereD', filteredContacts);
+  //   console.log('filtereD', filteredContacts);
 
   return (
     <>
@@ -37,11 +46,11 @@ const ContactList = () => {
               <BsFillTelephoneFill
                 style={{ fill: '#00D4E0', marginRight: '5px' }}
               />
-              {item.number}
+              {item.phone}
             </span>
             <button
               className={css.btn}
-              onClick={() => dispatch(remove(item.id))}
+              onClick={() => dispatch(deleteContact(item.id))}
             >
               <BsPersonDashFill
                 style={{ fill: '#00D4E0', marginRight: '5px' }}

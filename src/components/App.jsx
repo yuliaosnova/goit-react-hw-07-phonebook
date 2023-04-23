@@ -2,12 +2,22 @@ import Form from './Form/Form';
 import ContactList from './ContactList/ContactsList';
 import { Layout } from './Layout/Layout';
 import Modal from './Modal/Modal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchContacts } from 'redux/operations';
+import { getError, getIsLoading } from 'redux/selectors';
 
 export default function App() {
-  const contacts = useSelector(state => state.contacts);
-  const showModal = useSelector(state => state.showModal);
-
+	const dispatch = useDispatch();
+	// const contacts = useSelector(getContacts);
+	const showModal = useSelector(state => state.showModal);
+	const isLoading = useSelector(getIsLoading);
+	const error = useSelector(getError);
+ 
+	useEffect(() => {
+	  dispatch(fetchContacts());
+	}, [dispatch]);
+ 
   return (
     <>
       <Layout />
@@ -16,8 +26,8 @@ export default function App() {
           <Form />
         </Modal>
       )}
-
-      {contacts.length > 0 && <ContactList />}
+		{isLoading && !error && <b>Request in progress...</b>}
+      <ContactList />
     </>
   );
 }
