@@ -1,15 +1,20 @@
 import { useDeleteContactMutation } from 'redux/contactsSlice';
 import { BsTrash3 } from 'react-icons/bs';
 import css from './ContactListItem.module.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 export const ContactListItem = ({ item }) => {
   const [deleteContact, { isLoading }] = useDeleteContactMutation();
 
+  const clickHandler = event => {
+	deleteContact(item.id);
+	toast.success('Contact deleted!');
+  }
   return (
     <div className={css.Wrapper}>
       <button
         className={css.DeleteBtn}
-        onClick={() => deleteContact(item.id)}
+        onClick={() => clickHandler(item.id)}
         disabled={isLoading}
       >
         <BsTrash3 />
@@ -31,6 +36,7 @@ export const ContactListItem = ({ item }) => {
           <span className={css.Data}>{item.phone}</span>
         </p>
       </div>
+		<Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };
