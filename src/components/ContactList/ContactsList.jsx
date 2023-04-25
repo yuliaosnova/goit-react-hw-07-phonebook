@@ -1,67 +1,46 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import css from './ContactList.module.css';
-// import { remove } from 'redux/contactsSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  BsFillPersonLinesFill,
-  BsFillTelephoneFill,
-  BsPersonDashFill,
-} from 'react-icons/bs';
-import { getContacts } from 'redux/selectors';
-import { deleteContact, fetchContacts } from 'redux/operations';
+import { useGetContactsQuery } from 'redux/contactsSlice';
+import ContactListItem from 'components/ContactListtem/ContactListItem';
+import AddBtn from 'components/AddBtn/AddBtn';
+import { useSelector } from 'react-redux';
 
-const ContactList = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-	 console.log('useEffect')
-  }, [dispatch]);
-
-  const contacts = useSelector(getContacts);
-  console.log('contacts', contacts);
+export const ContactList = () => {
+  const { data, error, isLoading } = useGetContactsQuery();
   const filter = useSelector(state => state.filter);
-
+  //   console.log('filter', filter)
+  
   function getFilteredContacts() {
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter)
-    );
+    if (data) {
+      return data.filter(contact =>
+        contact.name.toLowerCase().includes(filter)
+      );
+    } else {
+      return data;
+    }
   }
+
   const filteredContacts = getFilteredContacts();
-  //   console.log('filtereD', filteredContacts);
+  console.log('filtereD', filteredContacts);
 
   return (
     <>
-      <h2 className={css.title}>Contacts</h2>
-      <ul className={css.list}>
-        {filteredContacts.map(item => (
-          <li key={item.id} className={css.item}>
-            <span className="name">
-              <BsFillPersonLinesFill
-                style={{ fill: '#00D4E0', marginRight: '5px' }}
-              />
-              {item.name}{' '}
-            </span>
-            <span className="number">
-              <BsFillTelephoneFill
-                style={{ fill: '#00D4E0', marginRight: '5px' }}
-              />
-              {item.phone}
-            </span>
-            <button
-              className={css.btn}
-              onClick={() => dispatch(deleteContact(item.id))}
-            >
-              <BsPersonDashFill
-                style={{ fill: '#00D4E0', marginRight: '5px' }}
-              />{' '}
-              DELETE CONTACT
-            </button>
-          </li>
-        ))}
-      </ul>
+      {error && 'ERROR(('}
+      {isLoading ? (
+        <div className={css.Spinner}>Loading...</div>
+      ) : (
+        <div className={css.Container}>
+          {/* <h2 className={css.Title}>Contacts</h2> */}
+          <ul className={css.List}>
+            {filteredContacts.map(item => (
+              <li key={item.id} className={css.Item}>
+                <ContactListItem item={item} />
+              </li>
+            ))}
+          </ul>
+          <AddBtn />
+        </div>
+      )}
     </>
   );
 };
-
-export default ContactList;

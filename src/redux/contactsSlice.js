@@ -1,107 +1,35 @@
-import { createSlice, isAnyOf } from '@reduxjs/toolkit';
-// import initialContacts from '../components/assets/contacts';
-import { addContact, deleteContact, fetchContacts } from './operations';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// const defaultStatus = {
-//   pending: 'pending',
-//   fulfilled: 'fulfilled',
-//   rejected: 'rejected',
-// };
-
-// const apiFunctions = [fetchContacts];
-
-// const fn = status => apiFunctions.map(el => el[status]);
-
-// const handlePending = state => {
-//   state.status = defaultStatus.pending;
-// };
-
-// const handleFulfilled = (state, { payload }) => {
-//   state.status = defaultStatus.fulfilled;
-//   state.items = payload;
-//   state.error = '';
-//   state.isLoading = false;
-// };
-
-// const handleRejected = (state, { payload }) => {
-//   state.status = defaultStatus.rejected;
-//   state.error = payload;
-//   state.isLoading = false;
-// };
-
-// const contactsSlice = createSlice({
-//   name: 'contacts',
-//   initialState: {
-//     items: [],
-//     isLoading: false,
-//     error: null,
-//   },
-//   extraReducers: builder => {
-//     builder
-//       // .addCase(getNewsThunk.pending, handlePending)
-//       // .addCase(getNewsThunk.fulfilled, handleFulfilled)
-//       // .addCase(getNewsThunk.rejected, handleRejected)
-//       // .addCase(getNewsSearchThunk.pending, handlePending)
-//       // .addCase(getNewsSearchThunk.fulfilled, handleFulfilled)
-//       // .addCase(getNewsSearchThunk.rejected, handleRejected)
-//       .addMatcher(isAnyOf(...fn(defaultStatus.pending)), handlePending)
-//       .addMatcher(isAnyOf(...fn(defaultStatus.fulfilled)), handleFulfilled)
-//       .addMatcher(isAnyOf(...fn(defaultStatus.rejected)), handleRejected);
-//   },
-// });
-
-const contactsSlice = createSlice({
-  name: 'contacts',
-  initialState: {
-    items: [],
-    filter: '',
-    isLoading: false,
-    error: null,
-  },
-  extraReducers: {
-    [fetchContacts.pending]: state => {
-      state.isLoading = true;
-    },
-
-    [fetchContacts.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.error = null;
-      state.items = payload;
-    },
-
-    [fetchContacts.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-
-    [addContact.pending]: state => {
-      state.isLoading = true;
-    },
-
-    [addContact.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.error = null;
-      state.items = [...state.items, action.payload];
-    },
-    [addContact.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-
-    [deleteContact.pending]: state => {
-      state.isLoading = true;
-    },
-
-    [deleteContact.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.error = null;
-      state.items = state.items.filter(({ id }) => id !== action.payload);
-    },
-    [deleteContact.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-  },
+// Define a service using a base URL and expected endpoints
+export const contactsApi = createApi({
+  reducerPath: 'contacts',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://6442bda433997d3ef9187c99.mockapi.io',
+  }),
+  tagTypes: ['Contact'],
+  endpoints: builder => ({
+    getContacts: builder.query({
+      query: () => '/contacts',
+      providesTags: ['Contact'],
+    }),
+    addContact: builder.mutation({
+      query: values => ({
+        url: '/contacts',
+        method: 'POST',
+        body: values,
+      }),
+      invalidatesTags: ['Contact'],
+    }),
+    deleteContact: builder.mutation({
+      query: id => ({
+        url: `contacts/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Contact'],
+    }),
+  }),
 });
 
-export const contactsReducer = contactsSlice.reducer;
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const { useGetContactsQuery, useAddContactMutation, useDeleteContactMutation, useUpdateContactMutation } = contactsApi;

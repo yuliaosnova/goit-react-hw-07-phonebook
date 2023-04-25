@@ -10,6 +10,7 @@ const Filter = () => {
   const setFilter = e => {
     e.preventDefault();
     const value = e.currentTarget.value.toLowerCase();
+	 console.log('value', value)
 
     dispatch(filterChange(value));
   };

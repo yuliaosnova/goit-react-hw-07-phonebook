@@ -3,25 +3,24 @@ import css from './Form.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 // import { add } from 'redux/contactsSlice';
 import { setShowModal } from 'redux/showModalSlice';
-import { nanoid } from 'nanoid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { addContact, fetchContacts } from 'redux/operations';
-
+import {
+  useAddContactMutation,
+  useGetContactsQuery,
+} from 'redux/contactsSlice';
 
 export default function Form() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const contacts = useSelector(state => state.contacts.items);
-  console.log (contacts);
+  const [addContact, result] = useAddContactMutation();
 
-  const notify = (message) => toast(message);
+  const { data: contacts, error, isLoading } = useGetContactsQuery();
+  console.log(contacts);
+
+  const notify = message => toast(message);
   const dispatch = useDispatch();
-
-//   useEffect(() => {
-// 	dispatch(fetchContacts());
-//  }, [dispatch]);
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -43,19 +42,12 @@ export default function Form() {
 
     const check = contacts.find(contact => contact.name === name);
     if (check) {
-      // alert(`${name} is already in contacts`);
-		notify(`${name} is already in contacts`);
-		
+      notify(`${name} is already in contacts`);
     } else {
-      // dispatch(add({ name, number, id: nanoid() }));
-		console.log(name, number)
-		dispatch(addContact({name, phone:number}));
-		// dispatch(fetchContacts());
-		dispatch(setShowModal());
+      addContact({ name, phone: number });
+      notify('Contact added');
+      dispatch(setShowModal());
     }
-	 
-		// dispatch(setShowModal())
-
     reset();
   };
 
@@ -94,7 +86,7 @@ export default function Form() {
       <button type="submit" className={css.ButtonSubmit}>
         Add contact
       </button>
-		<ToastContainer />
+      <ToastContainer />
     </form>
   );
 }
