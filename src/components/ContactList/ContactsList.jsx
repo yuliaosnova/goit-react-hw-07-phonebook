@@ -1,20 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import css from './ContactList.module.css';
-import { useGetContactsQuery } from 'redux/contactsSlice';
+import { useGetContactByIdQuery, useGetContactsQuery } from 'redux/contactsSlice';
 import ContactListItem from 'components/ContactListtem/ContactListItem';
 import AddBtn from 'components/AddBtn/AddBtn';
 import { useSelector } from 'react-redux';
+import ModalEdit from 'components/FormEdit/ModalEdit';
+import FormEdit from 'components/FormEdit/FormEdit';
 
-export const ContactList = ({getContactId}) => {
+export const ContactList = () => {
   const { data, error, isLoading } = useGetContactsQuery();
+  const showEditModal = useSelector(state => state.showEditModal);
   console.log('ConTaCts', data)
+  
+ 
   const filter = useSelector(state => state.filter);
   //   console.log('filter', filter)
+
+  const [editingContactId, setEditContactId] = useState('');
+  const getContactId = contactid => {
+    setEditContactId(contactid);
+  };
   
+  const { data: contact } = useGetContactByIdQuery(editingContactId);
+  console.log('contactId', editingContactId);
+  console.log('editingContact', contact);
+
+
   function getFilteredContacts() {
     if (data) {
-      return data.filter(contact =>
-        contact.name.toLowerCase().includes(filter)
+		
+      return data.filter(item  =>
+        (item.name ?? 'unknown').toLowerCase().includes(filter)
       );
     } else {
       return data;
@@ -41,6 +57,11 @@ export const ContactList = ({getContactId}) => {
           </ul>
           <AddBtn />
         </div>
+      )}
+		 {contact && showEditModal && (
+        <ModalEdit>
+          <FormEdit contactId={editingContactId} contact={contact} />
+        </ModalEdit>
       )}
     </>
   );
