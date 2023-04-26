@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import css from './Modal.module.css';
+import css from './ModalEdit.module.css';
 import { useDispatch } from 'react-redux';
-import { setShowModal } from 'redux/showModalSlice';
+
+import { setShowEditModal } from 'redux/showEditModalSlice';
 
 const modalRoot = document.querySelector('#modal-root');
 
-function Modal({ children }) {
+function ModalEdit({ children }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,18 +18,18 @@ function Modal({ children }) {
       //   console.log("Unmounting phase: same when componentWillUnmount runs");
       window.removeEventListener('keydown', handleKeyDown);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleKeyDown = e => {
     if (e.code === 'Escape') {
-      dispatch(setShowModal());
+      dispatch(setShowEditModal());
     }
   };
 
   const handleBackdropClick = event => {
     if (event.currentTarget === event.target) {
-      dispatch(setShowModal());
+      dispatch(setShowEditModal());
     }
   };
 
@@ -40,4 +41,4 @@ function Modal({ children }) {
   );
 }
 
-export default Modal;
+export default ModalEdit;

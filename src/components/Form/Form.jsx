@@ -2,12 +2,13 @@ import { useState } from 'react';
 import css from './Form.module.css';
 import { useDispatch } from 'react-redux';
 import { setShowModal } from 'redux/showModalSlice';
-import 'react-toastify/dist/ReactToastify.min.css';
+// import 'react-toastify/dist/ReactToastify.min.css';
 import {
   useAddContactMutation,
   useGetContactsQuery,
 } from 'redux/contactsSlice';
 import toast, { Toaster } from 'react-hot-toast';
+
 
 export default function Form() {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ export default function Form() {
   const [addContact] = useAddContactMutation();
 
   const { data: contacts } = useGetContactsQuery();
-  console.log(contacts);
+
 
   const dispatch = useDispatch();
 
@@ -43,7 +44,7 @@ export default function Form() {
       toast.error(`${name} is already in contacts`);
     } else {
       addContact({ name, phone: number });
-      // toast.success('Contact added!');
+      toast.success('Contact added!');
 		
       dispatch(setShowModal());
     }
@@ -85,7 +86,7 @@ export default function Form() {
       <button type="submit" className={css.ButtonSubmit}>
         Add contact
       </button>
-      <Toaster position="top-center" reverseOrder={false} />
+      
     </form>
   );
 }

@@ -4,7 +4,7 @@ const showModalSlice = createSlice({
   name: 'showModal',
   initialState: false,
   reducers: {
-    setShowModal(state, action) {
+    setShowModal(state, _) {
       return (state = !state);
     },
   },

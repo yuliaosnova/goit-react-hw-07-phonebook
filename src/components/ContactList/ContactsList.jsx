@@ -5,8 +5,9 @@ import ContactListItem from 'components/ContactListtem/ContactListItem';
 import AddBtn from 'components/AddBtn/AddBtn';
 import { useSelector } from 'react-redux';
 
-export const ContactList = () => {
+export const ContactList = ({getContactId}) => {
   const { data, error, isLoading } = useGetContactsQuery();
+  console.log('ConTaCts', data)
   const filter = useSelector(state => state.filter);
   //   console.log('filter', filter)
   
@@ -34,7 +35,7 @@ export const ContactList = () => {
           <ul className={css.List}>
             {filteredContacts.map(item => (
               <li key={item.id} className={css.Item}>
-                <ContactListItem item={item} />
+                <ContactListItem item={item} getContactId={getContactId} />
               </li>
             ))}
           </ul>

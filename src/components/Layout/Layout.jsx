@@ -7,10 +7,8 @@ export const Layout = () => {
       <header className={css.Header}>
         <h1 className={css.Title}>Phonebook</h1>
         <Filter />
-        
       </header>
-      <main>
-      </main>
+      <main></main>
     </div>
   );
 };

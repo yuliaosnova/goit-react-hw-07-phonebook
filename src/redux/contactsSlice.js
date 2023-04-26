@@ -12,6 +12,10 @@ export const contactsApi = createApi({
       query: () => '/contacts',
       providesTags: ['Contact'],
     }),
+    getContactById: builder.query({
+      query: id => `/contacts/${id}`,
+      providesTags: ['Contact'],
+    }),
     addContact: builder.mutation({
       query: values => ({
         url: '/contacts',
@@ -27,9 +31,23 @@ export const contactsApi = createApi({
       }),
       invalidatesTags: ['Contact'],
     }),
+    updateContact: builder.mutation({
+      query: ({name, phone, id}) => ({
+        url: `/contacts/${id}`,
+        method: 'PUT',
+        body: {name, phone, id},
+      }),
+      invalidatesTags: ['Contact'],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetContactsQuery, useAddContactMutation, useDeleteContactMutation, useUpdateContactMutation } = contactsApi;
+export const {
+  useGetContactsQuery,
+  useGetContactByIdQuery,
+  useAddContactMutation,
+  useDeleteContactMutation,
+  useUpdateContactMutation,
+} = contactsApi;
