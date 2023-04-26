@@ -2,7 +2,7 @@ import { useDeleteContactMutation } from 'redux/contactsSlice';
 import { BsTrash3 } from 'react-icons/bs';
 import { AiFillEdit } from 'react-icons/ai';
 import css from './ContactListItem.module.css';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { setShowEditModal } from 'redux/showEditModalSlice';
 

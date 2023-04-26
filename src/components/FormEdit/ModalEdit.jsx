@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import css from './ModalEdit.module.css';
+import css from './Edit.module.css';
 import { useDispatch } from 'react-redux';
 
 import { setShowEditModal } from 'redux/showEditModalSlice';

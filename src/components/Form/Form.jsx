@@ -7,7 +7,7 @@ import {
   useAddContactMutation,
   useGetContactsQuery,
 } from 'redux/contactsSlice';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 
 export default function Form() {

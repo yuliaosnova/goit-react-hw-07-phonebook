@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import css from './FormEdit.module.css';
+import css from './Edit.module.css';
 import { useDispatch } from 'react-redux';
 import {
   useGetContactByIdQuery,
